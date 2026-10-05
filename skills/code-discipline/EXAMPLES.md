@@ -2,6 +2,12 @@
 
 Real-world code examples demonstrating the four principles. Each example shows what LLMs commonly do wrong and how to fix it.
 
+These examples illustrate the principles; they do not override explicit user
+instructions or applicable repository guidance. Test steps apply only when
+permitted by those instructions, and their scope must follow those instructions.
+If tests require a user request, do not run them without one; report that they
+were not run. The examples do not require running a full test suite.
+
 ---
 
 ## 1. Think Before Coding
@@ -403,8 +409,8 @@ Plan:
 3. Check edge cases: Multiple active sessions, concurrent changes
    Verify: Additional tests pass
 
-4. Verify no regression: Existing auth tests still pass
-   Verify: Full test suite green
+4. Verify no regression within the permitted test scope
+   Verify: Relevant tests covering the modified authentication code pass
 
 Current test coverage for auth: [shows coverage]
 What's the specific auth issue you're seeing?
@@ -465,32 +471,38 @@ def sort_scores(scores):
 
 **✅ What Should Happen (Reproduce First)**
 
+Assume the required order has been confirmed: score descending, then name
+ascending for ties. Preserve input order for ties instead if that is the
+actual requirement.
+
 ```python
 # 1. First, write a test that reproduces the issue
 def test_sort_with_duplicate_scores():
     """Test sorting when multiple items have same score."""
     scores = [
-        {'name': 'Alice', 'score': 100},
-        {'name': 'Bob', 'score': 100},
         {'name': 'Charlie', 'score': 90},
+        {'name': 'Bob', 'score': 100},
+        {'name': 'Alice', 'score': 100},
     ]
     
     result = sort_scores(scores)
     
-    # The bug: order is non-deterministic for duplicates
-    # Run this test multiple times, it should be consistent
-    assert result[0]['score'] == 100
-    assert result[1]['score'] == 100
-    assert result[2]['score'] == 90
+    # Assert both descending scores and the required name order for ties.
+    # Reversed input names expose a score-only sort that preserves input order.
+    assert [(item['score'], item['name']) for item in result] == [
+        (100, 'Alice'),
+        (100, 'Bob'),
+        (90, 'Charlie'),
+    ]
 
-# Verify: Run test 10 times → fails with inconsistent ordering
+# Verify when permitted: This test must fail against the buggy implementation.
 
-# 2. Now fix with stable sort
+# 2. Now fix with an explicit name tie-breaker
 def sort_scores(scores):
     """Sort by score descending, then name ascending for ties."""
     return sorted(scores, key=lambda x: (-x['score'], x['name']))
 
-# Verify: Test passes consistently
+# Verify when permitted: The same test passes after the fix.
 ```
 
 ---

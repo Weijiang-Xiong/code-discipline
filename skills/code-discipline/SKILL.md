@@ -5,16 +5,7 @@ description: Must be used for every task that writes, modifies, debugs, reviews,
 
 ## Code Discipline for Agents
 
-The code will be reviewed by a human expert and multiple AI agents.
-
 Prioritize correctness, readability, and minimal, well-scoped changes.
-
-## Examples
-
-Before writing, modifying, debugging, reviewing, or refactoring code, read the relevant
-sections of [EXAMPLES.md](EXAMPLES.md).
-Treat examples as illustrations; explicit user instructions and applicable
-repository guidance take precedence, including whether and which tests to run.
 
 ## 1. Think Before Coding
 

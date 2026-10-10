@@ -10,7 +10,7 @@ Specific projects can also have their own prompts (maybe tracked by git), so the
 └── AGENTS.md                         # Small personal defaults and skill trigger
 
 ~/.codex/skills/
-└── coding-discipline/
+└── code-discipline/
     ├── SKILL.md                      # Canonical behavioral guidelines
     └── EXAMPLES.md                   # Optional examples
 
